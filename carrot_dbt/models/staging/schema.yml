@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_claims
+    description: "One row per claim: typed and de-duplicated."
+    columns:
+      - name: claim_id
+        data_tests:
+          - unique
+          - not_null
+      - name: member_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_eligibility')
+              field: member_id
+              config:
+                severity: warn
+      - name: amount_usd
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+
+  - name: stg_eligibility
+    description: "One row per member: latest record, standardized."
+    columns:
+      - name: member_id
+        data_tests:
+          - unique
+          - not_null
+      - name: country_code
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['US', 'GB', 'CA', 'DE', 'IN']
+      - name: email
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
