@@ -1,0 +1,4 @@
+.venv/
+.env
+landing/
+.DS_Store
